@@ -76,7 +76,7 @@ module apim 'modules/apim.bicep' = {
   name: 'apim'
   scope: rg
   params: {
-    name: '${abbrs.apiManagement}${environmentName}'
+    name: '${abbrs.apiManagement}${resourceToken}'
     location: location
     tags: tags
     backendUrl: 'https://${containerApp.outputs.fqdn}'

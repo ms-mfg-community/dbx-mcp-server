@@ -57,7 +57,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
       containers: [
         {
           name: 'mcp-server'
-          image: '${containerRegistryLoginServer}/mcp-server:${imageTag}'
+          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
           resources: {
             cpu: json('0.5')
             memory: '1.0Gi'

@@ -108,10 +108,6 @@ resource mcpApiPolicy 'Microsoft.ApiManagement/service/apis/policies@2023-09-01-
     <set-header name="X-Forwarded-For" exists-action="skip">
       <value>@(context.Request.IpAddress)</value>
     </set-header>
-    <!-- Forward Mcp-Session-Id for session continuity -->
-    <set-header name="Mcp-Session-Id" exists-action="override">
-      <value>@(context.Request.Headers.GetValueOrDefault("Mcp-Session-Id",""))</value>
-    </set-header>
   </inbound>
   <backend>
     <forward-request timeout="120" follow-redirects="true" buffer-response="false" />
@@ -120,8 +116,6 @@ resource mcpApiPolicy 'Microsoft.ApiManagement/service/apis/policies@2023-09-01-
     <base />
     <!-- Strip sensitive token from response headers -->
     <set-header name="X-Databricks-Token" exists-action="delete" />
-    <!-- Ensure Mcp-Session-Id is returned to client -->
-    <set-header name="Mcp-Session-Id" exists-action="passthrough" />
   </outbound>
   <on-error>
     <base />
