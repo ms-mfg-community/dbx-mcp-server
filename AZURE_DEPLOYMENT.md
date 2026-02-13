@@ -188,24 +188,73 @@ This takes approximately 3-5 minutes (plus 10-20 minutes if APIM is provisioned 
 
 ## After Deployment
 
-### Get your endpoints
+### For Admins: Get Your Deployment Details
+
+If you ran `azd up`, retrieve your endpoints:
 
 ```bash
 azd env get-values
 ```
 
-Key outputs:
-- `APIM_MCP_ENDPOINT` — The URL to configure in your MCP client
+Key outputs to share with developers:
+- `APIM_MCP_ENDPOINT` — The MCP server URL (e.g., `https://apim-xxxxx.azure-api.net/mcp`)
 - `APIM_GATEWAY_URL` — The APIM gateway base URL
 
-### Get your APIM subscription key
+---
 
-1. Go to the [Azure Portal](https://portal.azure.com)
-2. Navigate to your API Management instance
-3. Go to **Subscriptions**
-4. Copy the primary key for the "Databricks MCP Access" product
+## 👩‍💻 Developer Setup Guide
 
-### Configure GitHub Copilot (VS Code)
+**You don't need Azure access to use the MCP server.** Your admin has deployed it — you just need a few values to connect from VS Code. Here's exactly what you need and where to find each one.
+
+### What You'll Need
+
+| Value | Where to Get It | Example |
+|-------|----------------|---------|
+| **MCP Server URL** | Your admin provides this (the APIM endpoint) | `https://apim-xxxxx.azure-api.net/mcp` |
+| **APIM Subscription Key** | Your admin provides this, or self-service from the APIM Developer Portal (see below) | `c17ba71f3ed248e6...` |
+| **Databricks Workspace URL** | Your Databricks workspace → browser address bar, or **Settings → Workspace URL** | `https://adb-1234567890.azuredatabricks.net` |
+| **Databricks Personal Access Token** | Generate one in Databricks (see steps below) | `dapi0123456789abcdef...` |
+| **SQL Warehouse ID** | Databricks → **SQL Warehouses** → click your warehouse → copy the ID from the URL or **Connection Details** tab | `3b344f0c124e23fa` |
+| **Catalog Name** | Databricks → **Data** (left sidebar) → your catalog name appears at the top of the tree | `dbx_1` |
+| **Schema Name** | Databricks → **Data** → expand your catalog → schema name (often `default`) | `default` |
+
+### Step 1: Get Your APIM Subscription Key
+
+Your admin will provide this in one of two ways:
+
+**Option A: Admin shares it directly**
+Ask your admin for the APIM subscription key. They can find it in the Azure Portal:
+1. Go to [portal.azure.com](https://portal.azure.com)
+2. Search for **API Management services** in the top search bar
+3. Click on the APIM instance (name starts with `apim-`)
+4. In the left menu, go to **APIs → Subscriptions**
+5. Click **Show/hide keys** (the eye icon 👁️) next to "Built-in all-access subscription" or the "Databricks MCP Access" product subscription
+6. Copy the **Primary key**
+
+**Option B: Self-service via Developer Portal** (if enabled by your admin)
+1. Navigate to the APIM Developer Portal URL (ask your admin, typically `https://apim-xxxxx.developer.azure-api.net`)
+2. Sign in and subscribe to the **Databricks MCP Access** product
+3. Your subscription key will appear in your profile
+
+### Step 2: Generate a Databricks Personal Access Token
+
+1. Log in to your Databricks workspace (e.g., `https://adb-1234567890.azuredatabricks.net`)
+2. Click your **user icon** (top-right corner) → **Settings**
+3. Go to **Developer** → **Access tokens**
+4. Click **Generate new token**
+5. Add a comment (e.g., "MCP Server - VS Code") and set a lifetime (e.g., 90 days)
+6. Click **Generate** → **copy the token immediately** (you won't see it again!)
+
+> ⚠️ **Treat this token like a password.** Don't commit it to source control or share it in chat.
+
+### Step 3: Find Your SQL Warehouse ID
+
+1. In Databricks, click **SQL Warehouses** in the left sidebar
+2. Click on the warehouse you want to query
+3. The Warehouse ID is in the URL: `https://adb-xxx.azuredatabricks.net/sql/warehouses/`**`3b344f0c124e23fa`**
+4. Alternatively, click the **Connection details** tab and copy the **HTTP Path** — the warehouse ID is the last segment after `/warehouses/`
+
+### Step 4: Configure VS Code
 
 Add to `.vscode/mcp.json` in any workspace where you want Databricks error log tools available:
 
@@ -264,20 +313,28 @@ Add to `.vscode/mcp.json` in any workspace where you want Databricks error log t
 }
 ```
 
-Replace `<your-apim>` with your APIM instance name from `azd env get-values`.
+Replace `<your-apim>` with the MCP Server URL your admin provided (e.g., `apim-q3gyfuo6xmbwk`).
 
 > **Important:** Use `"type": "http"` (not `"sse"`). This tells VS Code to use the streamable-http MCP transport, which is the current standard for remote servers.
 
-When you open Copilot chat, VS Code will prompt you for:
-1. Your APIM subscription key (masked)
-2. Your Databricks workspace URL
-3. Your Databricks PAT (masked)
-4. Your SQL Warehouse ID
-5. Catalog and schema names (defaults pre-filled)
+### Step 5: Verify It Works
 
-Each user provides their own values — nothing is hardcoded.
+1. **Restart VS Code** (or reload the window with `Ctrl+Shift+P` → "Developer: Reload Window")
+2. VS Code will prompt you for each value the first time:
+   - APIM subscription key (masked — won't show on screen)
+   - Databricks workspace URL
+   - Databricks PAT (masked)
+   - SQL Warehouse ID
+   - Catalog and schema names (defaults pre-filled)
+3. Open **GitHub Copilot Chat** (`Ctrl+Shift+I`) and ask:
+   > "What are the top 10 most common errors?"
+4. Copilot should invoke the `get_error_frequency` tool and return results from your Databricks workspace
 
-### Configure Claude Desktop
+> 💡 **Tip:** Each value is entered once per VS Code session. If you need to change a value, restart VS Code and you'll be prompted again.
+
+---
+
+### Configure Claude Desktop (Alternative)
 
 Edit your Claude Desktop config (`%APPDATA%\Claude\claude_desktop_config.json` on Windows):
 
