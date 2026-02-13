@@ -83,7 +83,7 @@ The command will:
 4. Deploy to Container Apps
 5. Configure APIM gateway
 
-This takes approximately 15-20 minutes (APIM provisioning is the longest step).
+This takes approximately 3-5 minutes (plus 10-20 minutes if APIM is provisioned for the first time).
 
 ## After Deployment
 

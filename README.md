@@ -74,13 +74,13 @@ uv run mcp dev databricks_error_logs_mcp/server.py
 
 ## Azure Deployment
 
-See [AZURE_DEPLOYMENT.md](../AZURE_DEPLOYMENT.md) for one-click `azd up` deployment behind Azure API Management.
+See [AZURE_DEPLOYMENT.md](AZURE_DEPLOYMENT.md) for one-click `azd up` deployment behind Azure API Management.
 
 ## VS Code Integration
 
 ### Option A: Remote Server (Azure-hosted)
 
-If the MCP server is deployed to Azure (see [AZURE_DEPLOYMENT.md](../AZURE_DEPLOYMENT.md)), configure VS Code to connect to the remote endpoint.
+If the MCP server is deployed to Azure (see [AZURE_DEPLOYMENT.md](AZURE_DEPLOYMENT.md)), configure VS Code to connect to the remote endpoint.
 
 1. Open your workspace in VS Code
 2. Create or edit `.vscode/mcp.json`
