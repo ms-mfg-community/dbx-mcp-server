@@ -4,6 +4,17 @@
 
 An MCP (Model Context Protocol) server that enables GitHub Copilot to search and analyze application error logs stored in Databricks. Developers can get error context directly in their editor.
 
+## Architecture
+
+```mermaid
+graph LR
+    IDE["🖥️ VS Code / Copilot"] -- "HTTPS + Sub Key<br/>+ Databricks Headers" --> APIM["🔐 Azure API<br/>Management"]
+    APIM -- "HTTPS" --> CA["🐳 Container App<br/>MCP Server"]
+    CA -- "SQL via PAT" --> DBX["🔶 Databricks<br/>SQL Warehouse"]
+```
+
+> Full architecture diagram and deployment details in [AZURE_DEPLOYMENT.md](AZURE_DEPLOYMENT.md)
+
 ## Features
 
 - **Search error logs** by error code, severity, file path, or message content

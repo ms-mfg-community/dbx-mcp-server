@@ -4,39 +4,79 @@ Deploy the Databricks Error Logs MCP Server to Azure with a single command using
 
 ## Architecture
 
+```mermaid
+graph TB
+    subgraph Client["🖥️ Developer IDE"]
+        VSCode["VS Code / GitHub Copilot"]
+        Claude["Claude Desktop"]
+        CLI["GitHub Copilot CLI"]
+    end
+
+    subgraph Azure["☁️ Azure (Resource Group: rg-dev)"]
+        subgraph APIM["Azure API Management (Standard v2)"]
+            APIMGw["Gateway Endpoint<br/>apim-*.azure-api.net/mcp"]
+            SubKey["🔑 Subscription Key Auth"]
+            RateLimit["⏱️ Rate Limiting (60 req/min)"]
+            StripToken["🛡️ Strip X-Databricks-Token<br/>from outbound"]
+        end
+
+        subgraph CAE["Container Apps Environment"]
+            CA["Container App<br/>ca-mcp-server-dev<br/>0.5 vCPU / 1 GiB"]
+            MCP["MCP Server (Python)<br/>streamable-http on :8000<br/>/mcp  •  /health"]
+            Scale["📈 Scale 0→5 replicas<br/>(HTTP concurrency)"]
+        end
+
+        ACR["Azure Container<br/>Registry (Basic)<br/>cr*.azurecr.io"]
+        LAW["Log Analytics<br/>Workspace"]
+    end
+
+    subgraph DBX["🔶 Databricks (User's Workspace)"]
+        SQL["SQL Warehouse"]
+        Delta["Delta Table<br/>catalog.schema.parsed_error_logs"]
+    end
+
+    VSCode -- "HTTPS + Sub Key<br/>+ Databricks Headers" --> APIMGw
+    Claude -- "HTTPS + Sub Key<br/>+ Databricks Headers" --> APIMGw
+    CLI -- "HTTPS + Sub Key<br/>+ Databricks Headers" --> APIMGw
+
+    APIMGw --> SubKey --> RateLimit --> StripToken
+    StripToken -- "HTTPS (internal)" --> CA
+    CA --> MCP
+    MCP -- "SQL via PAT Token<br/>(user-provided)" --> SQL
+    SQL --> Delta
+
+    ACR -. "Image Pull" .-> CA
+    CAE -. "Logs" .-> LAW
+
+    style Azure fill:#e6f3ff,stroke:#0078d4,stroke-width:2px
+    style APIM fill:#fff3e0,stroke:#ff8c00,stroke-width:2px
+    style CAE fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    style DBX fill:#fff8e1,stroke:#ff6f00,stroke-width:2px
+    style Client fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
 ```
-┌──────────────────────────────┐
-│  GitHub Copilot / Claude      │
-│  (sends APIM subscription     │
-│   key + Databricks headers)   │
-└───────────┬──────────────────┘
-            │ HTTPS
-            ↓
-┌──────────────────────────────┐
-│  Azure API Management         │
-│  (Standard v2)                │
-│  • Subscription key auth      │
-│  • Rate limiting (60 req/min) │
-│  • Strips tokens from logs    │
-└───────────┬──────────────────┘
-            │ HTTPS (internal)
-            ↓
-┌──────────────────────────────┐
-│  Azure Container Apps         │
-│  (Python MCP Server)          │
-│  • streamable-http transport  │
-│  • /mcp endpoint              │
-│  • Scales 0-5 replicas        │
-│  • Reads config from headers  │
-└───────────┬──────────────────┘
-            │ User's PAT token
-            ↓
-┌──────────────────────────────┐
-│  Databricks Workspace         │
-│  (user's own workspace)       │
-│  • SQL Warehouse              │
-│  • Delta Tables               │
-└──────────────────────────────┘
+
+### Data Flow
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer IDE
+    participant APIM as Azure API Management
+    participant MCP as MCP Server (Container App)
+    participant DBX as Databricks SQL Warehouse
+
+    Dev->>APIM: POST /mcp (initialize)<br/>Headers: Sub Key
+    APIM->>APIM: Validate subscription key
+    APIM->>MCP: Forward request
+    MCP-->>APIM: 200 OK + Mcp-Session-Id
+    APIM-->>Dev: Session established
+
+    Dev->>APIM: POST /mcp (tools/call)<br/>Headers: Sub Key + Session ID<br/>+ X-Databricks-Host/Token/Warehouse
+    APIM->>MCP: Forward (strips token from response)
+    MCP->>MCP: Resolve config from headers
+    MCP->>DBX: SQL query via PAT token
+    DBX-->>MCP: Query results
+    MCP-->>APIM: Tool result (JSON-RPC)
+    APIM-->>Dev: Structured response
 ```
 
 ## Resources Created
