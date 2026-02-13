@@ -79,83 +79,78 @@ sequenceDiagram
     APIM-->>Dev: Structured response
 ```
 
-## Resources Created
+## Resources Created & Cost Estimates
 
-The table below shows the Azure resources deployed and their fixed monthly costs:
+All prices are approximate USD, East US 2 region. Container App costs assume 0.5 vCPU / 1 GiB, ~2 seconds average processing time per MCP request, and include free monthly grants (180K vCPU-seconds, 360K GiB-seconds, 2M requests per subscription).
 
-| Resource | SKU/Tier | Approx. Monthly Cost |
-|----------|----------|---------------------|
-| Resource Group | — | Free |
-| Azure Container Registry | Basic (10 GB) | ~$5 |
-| Container Apps Environment | Consumption | Free (included) |
-| Log Analytics Workspace | Per-GB ingestion | ~$2-5 |
-| API Management | Standard v2 | ~$700 ¹ |
-| **Fixed infrastructure** | | **~$707-710/mo** |
+### With APIM Standard v2
 
-### Container App Cost by Usage
+| Resource | SKU/Tier | 500 req/day | 1K req/day | 5K req/day | 10K req/day |
+|----------|----------|------------|-----------|-----------|------------|
+| Resource Group | — | Free | Free | Free | Free |
+| Container Registry | Basic (10 GB) | $5 | $5 | $5 | $5 |
+| Container Apps Env | Consumption | Free | Free | Free | Free |
+| Container App | 0.5 vCPU / 1 GiB | ~$0 ¹ | ~$0 ¹ | ~$0 ¹ | ~$4 |
+| Log Analytics | Per-GB | ~$2 | ~$3 | ~$4 | ~$5 |
+| API Management | Standard v2 | $700 | $700 | $700 | $700 |
+| **Monthly Total** | | **~$707** | **~$708** | **~$709** | **~$714** |
 
-The Container App (MCP Server) runs on the **Consumption plan** with generous free monthly grants per subscription: **180K vCPU-seconds**, **360K GiB-seconds**, and **2M requests**. Costs only apply after exceeding these thresholds.
+### With APIM Basic v2
 
-> Assumes 0.5 vCPU / 1 GiB per replica, ~2 seconds average processing time per MCP request.
+| Resource | SKU/Tier | 500 req/day | 1K req/day | 5K req/day | 10K req/day |
+|----------|----------|------------|-----------|-----------|------------|
+| Resource Group | — | Free | Free | Free | Free |
+| Container Registry | Basic (10 GB) | $5 | $5 | $5 | $5 |
+| Container Apps Env | Consumption | Free | Free | Free | Free |
+| Container App | 0.5 vCPU / 1 GiB | ~$0 ¹ | ~$0 ¹ | ~$0 ¹ | ~$4 |
+| Log Analytics | Per-GB | ~$2 | ~$3 | ~$4 | ~$5 |
+| API Management | Basic v2 | $170 | $170 | $170 | $170 |
+| **Monthly Total** | | **~$177** | **~$178** | **~$179** | **~$184** |
 
-| Daily Requests | Monthly Requests | Container App Cost | Total with APIM | Total without APIM ² |
-|---------------|-----------------|-------------------|----------------|---------------------|
-| 500 | ~15K | **~$0** (within free grants) | **~$710/mo** | **~$10/mo** |
-| 1,000 | ~30K | **~$0** (within free grants) | **~$710/mo** | **~$10/mo** |
-| 5,000 | ~150K | **~$0** (within free grants) | **~$710/mo** | **~$10/mo** |
-| 10,000 | ~300K | **~$3-4** | **~$713/mo** | **~$13/mo** |
+### Without APIM (Direct to Container App)
+
+| Resource | SKU/Tier | 500 req/day | 1K req/day | 5K req/day | 10K req/day |
+|----------|----------|------------|-----------|-----------|------------|
+| Resource Group | — | Free | Free | Free | Free |
+| Container Registry | Basic (10 GB) | $5 | $5 | $5 | $5 |
+| Container Apps Env | Consumption | Free | Free | Free | Free |
+| Container App | 0.5 vCPU / 1 GiB | ~$0 ¹ | ~$0 ¹ | ~$0 ¹ | ~$4 |
+| Log Analytics | Per-GB | ~$2 | ~$3 | ~$4 | ~$5 |
+| **Monthly Total** | | **~$7** | **~$8** | **~$9** | **~$14** |
 
 <details>
-<summary>Container App cost math (10K req/day example)</summary>
+<summary>¹ Container App cost breakdown</summary>
 
-- **300K requests/mo** — covered by 2M free request grant ($0)
-- **300K vCPU-seconds** (300K req × 2s × 0.5 vCPU) — 180K free, 120K billable × $0.000024 = $2.88
-- **600K GiB-seconds** (300K req × 2s × 1 GiB) — 360K free, 240K billable × $0.0000031 = $0.74
+At **5K req/day and below**, all compute stays within the free monthly grants:
+- 5K/day = 150K req/mo → 150K vCPU-seconds + 300K GiB-seconds (both under free thresholds)
+
+At **10K req/day**:
+- 300K requests/mo — covered by 2M free request grant ($0)
+- 300K vCPU-seconds (300K req × 2s × 0.5 vCPU) — 180K free, 120K billable × $0.000024 = $2.88
+- 600K GiB-seconds (300K req × 2s × 1 GiB) — 360K free, 240K billable × $0.0000031 = $0.74
 - **Total: ~$3.62/mo**
-
-At 5K req/day and below, all compute stays within the free grants.
 </details>
 
-### A Note on APIM Costs
+### Choosing an APIM Tier
 
-<details>
-<summary>¹ APIM Standard v2 is a shared platform investment</summary>
+APIM is the largest cost driver in this deployment, but it's important to understand that **APIM is a shared platform, not a dedicated resource for this MCP server**:
 
-**APIM Standard v2 costs ~$700/mo**, which is the largest line item in this deployment. However, APIM is designed as a **shared API gateway** — it doesn't need to be dedicated to this single MCP server:
+- **One APIM instance can front multiple MCP servers**, internal APIs, partner integrations, and other backend services across your organization
+- Standard v2 includes **50M API calls/month** — at 10K MCP requests/day you're using less than 1% of that capacity
+- APIM provides **centralized authentication, rate limiting, usage analytics, and a developer portal** across all your APIs
+- If your organization already runs an APIM instance, adding this MCP server is essentially **zero incremental cost**
 
-- **One APIM instance can front multiple MCP servers**, internal APIs, partner integrations, and other backend services
-- Standard v2 includes **50M API calls/month** — far more than this MCP server alone will consume
-- APIM provides **centralized auth, rate limiting, monitoring, and developer portal** across all your APIs
-- If you're already running APIM in your organization, adding this MCP server is essentially **zero incremental cost**
+| Consideration | Standard v2 ($700/mo) | Basic v2 ($170/mo) | No APIM |
+|--------------|----------------------|-------------------|---------|
+| Subscription key auth | ✅ | ✅ | ❌ |
+| Rate limiting | ✅ | ✅ | ❌ |
+| VNet integration | ✅ | ❌ | ❌ |
+| Scale units | Up to 10 | Up to 2 | N/A |
+| Developer portal | ✅ | ❌ | ❌ |
+| Multi-API gateway | ✅ Best value at scale | ✅ Good for small teams | N/A |
+| Included API calls | 50M/mo | 10M/mo | N/A |
 
-**If APIM is not justified for your use case**, you have alternatives:
-- **Basic v2 tier**: ~$170/mo (same features, lower scale limits)
-- **Skip APIM entirely**: Connect directly to the Container App URL — you lose subscription key auth and rate limiting, but save the entire APIM cost. The Container App endpoint is still HTTPS-secured and supports the same per-request header-based configuration.
-</details>
-
-<details>
-<summary>² "Without APIM" deployment option</summary>
-
-You can connect VS Code directly to the Container App endpoint instead of going through APIM:
-
-```json
-{
-  "servers": {
-    "databricksErrorLogs": {
-      "type": "http",
-      "url": "https://ca-mcp-server-<env>.<region>.azurecontainerapps.io/mcp",
-      "headers": {
-        "X-Databricks-Host": "${input:databricks-host}",
-        "X-Databricks-Token": "${input:databricks-token}",
-        "X-Databricks-Warehouse-Id": "${input:databricks-warehouse-id}"
-      }
-    }
-  }
-}
-```
-
-This eliminates the APIM cost entirely. To add basic access control without APIM, consider enabling [Container Apps authentication (EasyAuth)](https://learn.microsoft.com/en-us/azure/container-apps/authentication) or restricting ingress to specific IP ranges.
-</details>
+> **Without APIM**, you can connect VS Code directly to the Container App endpoint. The endpoint is still HTTPS-secured and supports the same per-request header-based config. To add access control without APIM, consider [Container Apps EasyAuth](https://learn.microsoft.com/en-us/azure/container-apps/authentication) or IP restrictions.
 
 ## Prerequisites
 
