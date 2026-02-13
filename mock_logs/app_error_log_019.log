@@ -1,0 +1,15 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.637224Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-31T01:29:05.637224Z	CC-1003	app/src/handlers.py	Error	Failed to authenticate user credentials
+2026-01-31T01:30:19.637224Z	CC-5002	app/tests/test_api.py	Warning	Null pointer exception: object is None
+2026-01-29T06:05:01.637224Z	CC-1004	scripts/migrate.py	Warning	Queue processing timeout exceeded
+2026-02-04T18:30:09.637224Z	CC-1005	app/src/config.py	Error	Null pointer exception: object is None
+2026-02-04T18:02:13.637224Z	CC-1004	app/src/auth.py	Error	Type casting error: incompatible types
+2026-02-03T06:09:30.637224Z	CC-1004	app/api/middleware.py	Event	Configuration parameter missing: db_host
+2026-02-03T04:50:40.637224Z	CC-1004	app/src/database.py	Warning	Service dependency unavailable
+2026-02-01T13:49:14.637224Z	CC-3002	app/api/endpoints.py	Warning	Circular import detected in module
+2026-02-02T03:04:21.637224Z	CC-5005	app/services/cache.py	Error	Queue processing timeout exceeded
+2026-02-01T01:56:20.637224Z	CC-3003	app/tests/test_auth.py	Warning	SSL certificate validation failed
+2026-02-03T18:04:58.637224Z	CC-4002	app/src/database.py	Event	Resource exhausted: max connections reached

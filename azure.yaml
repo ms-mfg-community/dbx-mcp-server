@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: databricks-mcp-server
+metadata:
+  template: databricks-mcp-server
+services:
+  mcp-server:
+    project: ./mcp_server
+    host: containerapp
+    language: python
+    docker:
+      path: ./Dockerfile

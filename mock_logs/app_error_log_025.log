@@ -1,0 +1,11 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.645609Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-30T16:58:58.645609Z	CC-1002	scripts/deploy.py	Error	Stack overflow in recursive function
+2026-02-03T11:16:27.645609Z	CC-1005	scripts/migrate.py	Event	Transaction rollback due to deadlock
+2026-02-03T00:46:06.645609Z	CC-5005	app/services/cache.py	Error	Integer overflow detected
+2026-02-03T13:12:28.645609Z	CC-2005	app/src/database.py	Error	Null pointer exception: object is None
+2026-02-03T10:01:47.645609Z	CC-3001	app/models/order.py	Warning	Service dependency unavailable
+2026-02-03T22:18:38.645609Z	CC-5005	app/src/config.py	Event	Unhandled exception in worker thread
+2026-02-01T10:09:21.645609Z	CC-1005	app/src/handlers.py	Event	File not found: app/services/cache.py

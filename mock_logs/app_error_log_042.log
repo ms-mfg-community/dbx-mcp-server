@@ -1,0 +1,14 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.669907Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-02T13:37:59.669907Z	CC-4003	app/tests/test_api.py	Error	Data validation failed: invalid format
+2026-02-04T12:05:02.669907Z	CC-2004	app/src/utils.py	Warning	Database connection timeout after 30 seconds
+2026-02-02T12:28:08.669907Z	CC-2002	app/services/queue.py	Error	Cache miss for key: cache_1601
+2026-02-03T21:26:09.669907Z	CC-5004	scripts/migrate.py	Event	Data validation failed: invalid format
+2026-01-29T05:31:34.669907Z	CC-5004	app/src/auth.py	Event	Circular import detected in module
+2026-02-03T09:49:42.669907Z	CC-5002	app/src/handlers.py	Event	Index out of bounds exception
+2026-02-02T12:32:41.669907Z	CC-1002	app/services/cache.py	Event	File not found: app/src/main.py
+2026-02-04T19:38:55.669907Z	CC-5001	app/models/product.py	Error	Stack overflow in recursive function
+2026-01-31T22:06:18.669907Z	CC-4005	app/api/middleware.py	Event	SSL certificate validation failed
+2026-02-03T03:39:22.669907Z	CC-5001	scripts/migrate.py	Event	Data validation failed: invalid format

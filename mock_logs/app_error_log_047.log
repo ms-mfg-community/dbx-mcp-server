@@ -1,0 +1,17 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.677529Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-02T11:51:11.677529Z	CC-3004	app/api/middleware.py	Error	File not found: scripts/migrate.py
+2026-02-02T19:39:47.677529Z	CC-4005	app/models/product.py	Warning	Queue processing timeout exceeded
+2026-02-04T04:43:27.677529Z	CC-5005	app/tests/test_api.py	Error	API rate limit exceeded: 936 requests/min
+2026-01-31T22:07:41.677529Z	CC-1002	app/api/endpoints.py	Warning	Invalid JSON payload in request body
+2026-02-02T19:32:45.677529Z	CC-5003	app/src/utils.py	Error	Regex compilation error: invalid pattern
+2026-01-31T21:19:44.677529Z	CC-2005	scripts/deploy.py	Error	Failed to authenticate user credentials
+2026-02-03T15:11:22.677529Z	CC-4001	app/src/main.py	Warning	API rate limit exceeded: 550 requests/min
+2026-02-03T19:48:05.677529Z	CC-3004	app/api/middleware.py	Error	Index out of bounds exception
+2026-02-04T03:25:23.677529Z	CC-3001	app/services/queue.py	Warning	Resource exhausted: max connections reached
+2026-02-04T09:40:26.677529Z	CC-3001	scripts/deploy.py	Warning	Permission denied: insufficient privileges
+2026-01-29T06:44:20.677529Z	CC-3003	app/services/queue.py	Warning	Type casting error: incompatible types
+2026-02-02T06:01:26.677529Z	CC-5002	app/src/main.py	Event	Database connection timeout after 30 seconds
+2026-02-01T14:52:40.677529Z	CC-3004	app/tests/test_auth.py	Warning	Integer overflow detected

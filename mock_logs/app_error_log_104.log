@@ -1,0 +1,13 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.753113Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-30T04:04:48.753113Z	CC-4004	app/services/cache.py	Error	Network socket error: connection refused
+2026-01-31T12:58:05.753113Z	CC-4003	app/api/middleware.py	Warning	Invalid JSON payload in request body
+2026-01-31T10:36:14.753113Z	CC-2001	app/services/cache.py	Warning	Regex compilation error: invalid pattern
+2026-01-30T01:44:51.753113Z	CC-5004	app/models/user.py	Warning	Type casting error: incompatible types
+2026-02-04T09:53:19.753113Z	CC-1001	scripts/migrate.py	Event	Failed to authenticate user credentials
+2026-01-29T04:30:57.753113Z	CC-2003	scripts/migrate.py	Warning	Service dependency unavailable
+2026-02-01T04:10:29.753113Z	CC-1001	app/services/queue.py	Event	Failed to authenticate user credentials
+2026-02-01T15:25:17.753113Z	CC-2002	scripts/deploy.py	Error	Type casting error: incompatible types
+2026-01-31T18:14:33.753113Z	CC-1002	app/models/order.py	Warning	Cache miss for key: cache_5750

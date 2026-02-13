@@ -1,0 +1,9 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.667900Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-01T16:51:46.667900Z	CC-3002	app/services/queue.py	Error	Cache miss for key: cache_2834
+2026-02-01T15:33:12.667900Z	CC-3004	app/models/order.py	Event	Circular import detected in module
+2026-02-04T09:17:12.667900Z	CC-4001	app/api/endpoints.py	Warning	Memory allocation failed: insufficient heap space
+2026-01-29T21:24:19.667900Z	CC-5002	app/src/handlers.py	Warning	Index out of bounds exception
+2026-02-03T11:26:08.667900Z	CC-5003	app/src/database.py	Error	Unhandled exception in worker thread

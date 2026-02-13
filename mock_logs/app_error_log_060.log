@@ -1,0 +1,15 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.695799Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-29T02:29:24.695799Z	CC-5005	app/src/main.py	Error	Failed to authenticate user credentials
+2026-02-03T17:27:42.695799Z	CC-1001	app/src/handlers.py	Warning	Circular import detected in module
+2026-01-29T02:19:11.695799Z	CC-3004	app/src/utils.py	Warning	Null pointer exception: object is None
+2026-01-31T11:25:53.695799Z	CC-1005	app/api/endpoints.py	Error	Queue processing timeout exceeded
+2026-01-30T13:29:30.695799Z	CC-4005	app/src/auth.py	Event	Cache miss for key: cache_5543
+2026-01-31T19:26:58.695799Z	CC-4001	app/models/user.py	Warning	Unhandled exception in worker thread
+2026-01-29T15:24:04.695799Z	CC-4005	app/models/product.py	Event	Memory allocation failed: insufficient heap space
+2026-02-02T02:39:24.695799Z	CC-5001	app/src/config.py	Event	Integer overflow detected
+2026-01-30T17:52:06.695799Z	CC-1005	app/api/middleware.py	Warning	Memory allocation failed: insufficient heap space
+2026-02-03T07:12:22.695799Z	CC-2005	app/src/config.py	Event	Type casting error: incompatible types
+2026-01-29T21:09:08.695799Z	CC-3001	app/tests/test_api.py	Warning	API rate limit exceeded: 849 requests/min

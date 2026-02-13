@@ -1,0 +1,16 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.735353Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-03T19:28:47.735353Z	CC-5005	app/models/product.py	Event	File not found: app/tests/test_api.py
+2026-01-30T08:26:54.735353Z	CC-2001	app/api/middleware.py	Event	Index out of bounds exception
+2026-02-02T16:16:09.735353Z	CC-3004	app/models/order.py	Event	Queue processing timeout exceeded
+2026-02-03T17:45:20.735353Z	CC-5002	app/api/endpoints.py	Warning	Type casting error: incompatible types
+2026-01-30T12:43:19.735353Z	CC-2003	app/models/order.py	Event	Permission denied: insufficient privileges
+2026-02-01T17:42:30.735353Z	CC-4005	scripts/deploy.py	Warning	Invalid JSON payload in request body
+2026-02-03T09:21:23.735353Z	CC-5004	app/models/user.py	Event	Unhandled exception in worker thread
+2026-01-31T13:01:55.735353Z	CC-1005	app/api/middleware.py	Error	Regex compilation error: invalid pattern
+2026-02-01T13:22:23.735353Z	CC-4005	app/src/utils.py	Error	Cache miss for key: cache_7988
+2026-02-02T22:04:53.735353Z	CC-5002	app/services/cache.py	Warning	Circular import detected in module
+2026-01-31T23:10:44.735353Z	CC-5003	scripts/deploy.py	Warning	Index out of bounds exception
+2026-02-04T11:36:56.735353Z	CC-4002	app/api/endpoints.py	Warning	Index out of bounds exception

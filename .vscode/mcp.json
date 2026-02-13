@@ -1,0 +1,52 @@
+{
+  "servers": {
+    "databricksErrorLogs": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "-m",
+        "databricks_error_logs_mcp"
+      ],
+      "cwd": "${workspaceFolder}/mcp_server",
+      "env": {
+        "DATABRICKS_HOST": "${input:databricks-host}",
+        "DATABRICKS_TOKEN": "${input:databricks-token}",
+        "DATABRICKS_WAREHOUSE_ID": "${input:databricks-warehouse-id}",
+        "DATABRICKS_CATALOG": "${input:databricks-catalog}",
+        "DATABRICKS_SCHEMA": "${input:databricks-schema}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "databricks-host",
+      "description": "Databricks workspace URL (e.g. https://adb-xxx.azuredatabricks.net)"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-token",
+      "description": "Databricks Personal Access Token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-warehouse-id",
+      "description": "Databricks SQL Warehouse ID"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-catalog",
+      "description": "Databricks Unity Catalog name",
+      "default": "dbx_1"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-schema",
+      "description": "Databricks schema name",
+      "default": "default"
+    }
+  ]
+}

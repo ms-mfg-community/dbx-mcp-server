@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# MCP config with credentials
+mcp_server/mcp_config.json
+
+# IDE
+.vscode/settings.json
+
+# uv
+uv.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Azure
+.azure/
+
+# Docker
+*.tar

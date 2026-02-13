@@ -1,0 +1,10 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.617464Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-01T04:30:08.617464Z	CC-3003	app/models/user.py	Warning	Transaction rollback due to deadlock
+2026-01-29T06:12:23.617464Z	CC-1004	app/models/user.py	Event	Cache miss for key: cache_5609
+2026-02-03T16:35:26.617464Z	CC-1003	app/api/middleware.py	Event	SSL certificate validation failed
+2026-01-30T05:25:44.617464Z	CC-5005	scripts/migrate.py	Error	Transaction rollback due to deadlock
+2026-01-30T23:36:12.617464Z	CC-5005	app/src/auth.py	Warning	API rate limit exceeded: 936 requests/min
+2026-01-30T22:48:31.617464Z	CC-2002	app/services/cache.py	Error	Service dependency unavailable

@@ -1,0 +1,14 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.624874Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-03T19:50:43.624874Z	CC-3005	app/services/queue.py	Warning	Corrupted data in storage backend
+2026-01-31T15:31:08.624874Z	CC-2004	app/src/auth.py	Warning	Permission denied: insufficient privileges
+2026-02-01T18:35:33.624874Z	CC-4003	app/src/main.py	Error	File not found: app/src/config.py
+2026-02-03T07:32:42.624874Z	CC-3002	app/src/database.py	Warning	Circular import detected in module
+2026-02-02T13:11:00.624874Z	CC-5005	app/api/endpoints.py	Event	API rate limit exceeded: 863 requests/min
+2026-02-01T17:41:29.624874Z	CC-1005	app/src/auth.py	Event	Corrupted data in storage backend
+2026-01-30T11:25:05.624874Z	CC-5002	app/models/user.py	Error	Failed to authenticate user credentials
+2026-01-29T16:34:10.624874Z	CC-1003	app/models/user.py	Error	API rate limit exceeded: 502 requests/min
+2026-02-02T00:14:41.624874Z	CC-4002	app/src/config.py	Error	Integer overflow detected
+2026-01-30T21:03:09.624874Z	CC-2001	scripts/migrate.py	Error	Configuration parameter missing: api_key

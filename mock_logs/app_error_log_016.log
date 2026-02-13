@@ -1,0 +1,19 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.632554Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-01T17:45:19.632554Z	CC-5005	scripts/migrate.py	Event	Regex compilation error: invalid pattern
+2026-01-29T19:32:42.632554Z	CC-2002	app/tests/test_api.py	Warning	Network socket error: connection refused
+2026-02-02T00:27:20.632554Z	CC-2003	app/src/main.py	Warning	Type casting error: incompatible types
+2026-02-02T01:29:43.632554Z	CC-1004	scripts/migrate.py	Warning	Index out of bounds exception
+2026-02-04T06:46:34.632554Z	CC-5004	app/models/user.py	Error	Unhandled exception in worker thread
+2026-01-31T13:53:57.632554Z	CC-5002	app/src/handlers.py	Event	Null pointer exception: object is None
+2026-01-29T23:23:54.632554Z	CC-2004	app/tests/test_api.py	Warning	Data validation failed: invalid format
+2026-01-30T12:23:26.632554Z	CC-1004	app/tests/test_api.py	Error	Unhandled exception in worker thread
+2026-02-03T17:33:27.632554Z	CC-3002	app/src/utils.py	Warning	Configuration parameter missing: api_key
+2026-02-01T05:50:08.632554Z	CC-3004	app/src/auth.py	Error	Failed to authenticate user credentials
+2026-02-01T09:37:08.632554Z	CC-2005	app/services/cache.py	Warning	File not found: scripts/deploy.py
+2026-02-02T07:21:43.632554Z	CC-1003	app/src/handlers.py	Warning	Configuration parameter missing: db_host
+2026-01-29T14:02:26.632554Z	CC-2004	app/services/queue.py	Warning	Invalid JSON payload in request body
+2026-02-01T22:58:22.632554Z	CC-3001	app/api/endpoints.py	Error	File not found: app/services/cache.py
+2026-01-31T21:35:22.632554Z	CC-1003	app/api/middleware.py	Event	Transaction rollback due to deadlock

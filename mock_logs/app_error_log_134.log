@@ -1,0 +1,14 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.790317Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-30T22:19:46.790317Z	CC-4005	app/api/endpoints.py	Warning	Circular import detected in module
+2026-02-02T10:00:47.790317Z	CC-3005	app/src/config.py	Event	Queue processing timeout exceeded
+2026-02-03T02:30:49.790317Z	CC-4005	app/src/main.py	Warning	Circular import detected in module
+2026-01-30T17:21:59.790317Z	CC-1002	app/api/endpoints.py	Error	Queue processing timeout exceeded
+2026-02-01T08:44:57.790317Z	CC-2002	app/src/main.py	Error	Cache miss for key: cache_7384
+2026-02-04T22:02:26.790317Z	CC-1002	app/api/endpoints.py	Error	Integer overflow detected
+2026-01-28T23:32:34.790317Z	CC-1003	app/models/product.py	Event	Type casting error: incompatible types
+2026-01-30T09:51:09.790317Z	CC-2001	app/src/database.py	Warning	Permission denied: insufficient privileges
+2026-01-31T16:05:20.790317Z	CC-4001	app/api/endpoints.py	Event	Configuration parameter missing: api_key
+2026-01-29T22:19:25.790317Z	CC-1004	app/src/auth.py	Event	Transaction rollback due to deadlock

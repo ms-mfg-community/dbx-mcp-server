@@ -1,0 +1,12 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.630483Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-01T17:37:24.630483Z	CC-4005	app/tests/test_api.py	Warning	Unhandled exception in worker thread
+2026-01-29T00:20:09.630483Z	CC-2002	app/src/config.py	Error	Null pointer exception: object is None
+2026-01-28T23:39:37.630483Z	CC-4004	app/src/database.py	Error	Type casting error: incompatible types
+2026-02-01T05:49:07.630483Z	CC-4004	app/services/queue.py	Event	API rate limit exceeded: 357 requests/min
+2026-01-30T11:24:50.630483Z	CC-4004	app/src/main.py	Error	Queue processing timeout exceeded
+2026-01-29T02:46:38.630483Z	CC-4004	app/src/handlers.py	Event	Null pointer exception: object is None
+2026-01-29T05:05:56.630483Z	CC-1002	app/tests/test_api.py	Event	Type casting error: incompatible types
+2026-02-02T13:11:40.630483Z	CC-3005	app/api/endpoints.py	Warning	Cache miss for key: cache_9593

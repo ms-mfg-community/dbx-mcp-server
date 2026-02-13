@@ -1,0 +1,15 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.660727Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-02T17:16:15.660727Z	CC-1004	app/src/handlers.py	Warning	Circular import detected in module
+2026-02-02T10:29:15.660727Z	CC-2002	app/src/config.py	Error	Cache miss for key: cache_4505
+2026-02-02T17:35:52.660727Z	CC-5004	app/models/user.py	Warning	Permission denied: insufficient privileges
+2026-01-30T16:49:02.660727Z	CC-5004	app/models/order.py	Error	Service dependency unavailable
+2026-01-30T12:19:28.660727Z	CC-4004	scripts/migrate.py	Event	Memory allocation failed: insufficient heap space
+2026-01-29T12:37:35.660727Z	CC-5002	app/services/cache.py	Error	Permission denied: insufficient privileges
+2026-02-04T19:35:08.660727Z	CC-3004	scripts/migrate.py	Error	API rate limit exceeded: 620 requests/min
+2026-02-03T14:02:56.660727Z	CC-2005	app/services/cache.py	Warning	Corrupted data in storage backend
+2026-02-02T03:01:47.660727Z	CC-1003	app/models/product.py	Error	Database connection timeout after 30 seconds
+2026-01-31T17:12:20.660727Z	CC-2004	app/services/cache.py	Warning	Index out of bounds exception
+2026-01-29T19:12:11.660727Z	CC-2005	app/models/user.py	Warning	API rate limit exceeded: 521 requests/min

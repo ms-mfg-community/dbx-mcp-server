@@ -1,0 +1,18 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.661956Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-30T01:15:27.661956Z	CC-3003	app/src/database.py	Error	Null pointer exception: object is None
+2026-01-29T09:16:18.661956Z	CC-1003	app/services/queue.py	Event	Permission denied: insufficient privileges
+2026-01-30T06:14:13.661956Z	CC-5005	app/src/utils.py	Error	Stack overflow in recursive function
+2026-01-31T06:48:31.661956Z	CC-2003	app/src/auth.py	Event	Stack overflow in recursive function
+2026-02-01T15:06:46.661956Z	CC-4003	scripts/migrate.py	Warning	Cache miss for key: cache_4106
+2026-02-04T18:56:09.661956Z	CC-3005	app/models/order.py	Warning	Type casting error: incompatible types
+2026-01-31T14:34:13.661956Z	CC-3004	app/api/endpoints.py	Error	Transaction rollback due to deadlock
+2026-01-30T20:04:54.661956Z	CC-2003	app/services/cache.py	Event	Unhandled exception in worker thread
+2026-01-31T10:19:15.661956Z	CC-5001	app/tests/test_auth.py	Error	Cache miss for key: cache_7489
+2026-01-31T19:13:17.661956Z	CC-3002	app/src/handlers.py	Error	SSL certificate validation failed
+2026-02-04T07:34:18.661956Z	CC-4004	app/src/handlers.py	Warning	Unhandled exception in worker thread
+2026-02-01T06:57:44.661956Z	CC-2003	app/api/endpoints.py	Error	Resource exhausted: max connections reached
+2026-02-03T10:40:57.661956Z	CC-4001	app/api/endpoints.py	Error	Invalid JSON payload in request body
+2026-01-30T10:08:49.661956Z	CC-5004	app/src/config.py	Event	Transaction rollback due to deadlock

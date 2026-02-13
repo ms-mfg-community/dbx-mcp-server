@@ -1,0 +1,15 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.852638Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-04T13:32:07.852638Z	CC-4001	app/services/queue.py	Warning	API rate limit exceeded: 406 requests/min
+2026-02-04T16:15:58.852638Z	CC-2003	app/models/user.py	Warning	SSL certificate validation failed
+2026-01-30T07:17:10.852638Z	CC-4002	app/src/utils.py	Warning	Failed to authenticate user credentials
+2026-01-31T18:45:53.852638Z	CC-5002	app/src/config.py	Warning	Index out of bounds exception
+2026-01-30T02:27:41.852638Z	CC-1002	app/src/auth.py	Event	Invalid JSON payload in request body
+2026-02-03T16:51:56.853249Z	CC-5005	app/src/main.py	Warning	Stack overflow in recursive function
+2026-01-29T10:00:42.853249Z	CC-2003	app/services/queue.py	Event	File not found: app/services/queue.py
+2026-02-04T01:33:25.853249Z	CC-5002	app/tests/test_auth.py	Warning	Configuration parameter missing: api_key
+2026-02-03T04:27:44.853249Z	CC-1002	app/src/utils.py	Warning	Integer overflow detected
+2026-02-03T18:25:28.853249Z	CC-1001	app/api/endpoints.py	Event	Queue processing timeout exceeded
+2026-01-31T16:22:26.853249Z	CC-5001	app/services/queue.py	Event	Failed to authenticate user credentials

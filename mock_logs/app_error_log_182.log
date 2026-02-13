@@ -1,0 +1,18 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.850087Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-01-31T12:28:14.850087Z	CC-1003	scripts/migrate.py	Error	Permission denied: insufficient privileges
+2026-01-31T11:09:24.850087Z	CC-1002	app/src/utils.py	Error	Transaction rollback due to deadlock
+2026-01-30T11:28:04.850087Z	CC-3004	app/src/auth.py	Event	Network socket error: connection refused
+2026-02-03T04:30:09.850087Z	CC-1005	app/tests/test_auth.py	Event	API rate limit exceeded: 953 requests/min
+2026-02-02T12:16:22.850087Z	CC-3002	app/tests/test_auth.py	Warning	Integer overflow detected
+2026-01-29T05:18:09.850087Z	CC-1003	app/tests/test_auth.py	Warning	Invalid JSON payload in request body
+2026-01-29T02:31:44.850087Z	CC-5003	app/src/database.py	Warning	Regex compilation error: invalid pattern
+2026-01-30T19:53:23.850087Z	CC-5005	app/api/middleware.py	Warning	Circular import detected in module
+2026-02-01T19:17:21.850087Z	CC-4003	app/tests/test_auth.py	Error	Failed to authenticate user credentials
+2026-01-31T14:50:49.850087Z	CC-2001	app/src/utils.py	Error	Regex compilation error: invalid pattern
+2026-01-31T19:51:59.850087Z	CC-1005	scripts/deploy.py	Error	Queue processing timeout exceeded
+2026-01-29T16:30:24.850087Z	CC-1001	app/api/middleware.py	Error	Failed to authenticate user credentials
+2026-02-03T12:35:51.850087Z	CC-2004	scripts/migrate.py	Warning	Unhandled exception in worker thread
+2026-01-30T21:11:11.850087Z	CC-4003	app/tests/test_auth.py	Warning	Cache miss for key: cache_3726

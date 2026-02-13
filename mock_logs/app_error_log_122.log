@@ -1,0 +1,15 @@
+# Application Error Log
+# Generated: 2026-02-04T23:13:26.775874Z
+# Format: TIMESTAMP	ERROR_CODE	FILE	SEVERITY	MESSAGE
+------------------------------------------------------------------------------------------------------------------------
+2026-02-02T19:30:14.775874Z	CC-5004	app/src/auth.py	Error	Circular import detected in module
+2026-02-02T04:57:10.775874Z	CC-5005	app/api/middleware.py	Event	Configuration parameter missing: api_key
+2026-02-04T06:45:05.775874Z	CC-4001	app/src/database.py	Warning	Unhandled exception in worker thread
+2026-01-29T04:35:31.775874Z	CC-1002	app/src/auth.py	Error	Integer overflow detected
+2026-02-03T00:54:14.775874Z	CC-3003	app/api/endpoints.py	Warning	Network socket error: connection refused
+2026-01-29T16:14:14.775874Z	CC-3005	app/models/user.py	Error	Permission denied: insufficient privileges
+2026-01-30T00:07:53.775874Z	CC-1001	app/api/middleware.py	Error	Configuration parameter missing: api_key
+2026-02-02T10:02:43.775874Z	CC-2003	app/services/cache.py	Error	Unhandled exception in worker thread
+2026-02-02T06:59:12.775874Z	CC-4002	app/models/product.py	Event	API rate limit exceeded: 354 requests/min
+2026-02-02T00:51:31.775874Z	CC-5004	app/services/cache.py	Error	Cache miss for key: cache_2074
+2026-02-03T01:59:06.775874Z	CC-4003	app/src/handlers.py	Error	API rate limit exceeded: 955 requests/min
