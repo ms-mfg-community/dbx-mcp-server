@@ -81,15 +81,33 @@ sequenceDiagram
 
 ## Resources Created
 
-| Resource | SKU/Tier | Approx. Cost |
-|----------|----------|-------------|
+> **Cost estimate assumes ~10,000 requests/day (~300K/month).** Prices are approximate USD, East US 2 region.
+
+| Resource | SKU/Tier | Approx. Monthly Cost |
+|----------|----------|---------------------|
 | Resource Group | — | Free |
-| Azure Container Registry | Basic | ~$5/mo |
-| Container Apps Environment | Consumption | ~$0-20/mo |
-| Container App (MCP Server) | 0.5 vCPU / 1 GiB | Scales to zero |
-| Log Analytics Workspace | Per-GB | ~$2-5/mo |
-| API Management | Standard v2 | ~$0.35/gateway-hour |
-| **Total estimate** | | **~$30-60/mo** |
+| Azure Container Registry | Basic (10 GB) | ~$5 |
+| Container Apps Environment | Consumption | Free (included) |
+| Container App (MCP Server) | 0.5 vCPU / 1 GiB | ~$3-4 ¹ |
+| Log Analytics Workspace | Per-GB ingestion | ~$2-5 |
+| API Management | Standard v2 | ~$700 ² |
+| **Total estimate** | | **~$710-715/mo** |
+
+<details>
+<summary>¹ Container App cost breakdown (10K req/day)</summary>
+
+- **300K requests/mo** — covered by 2M free request grant
+- **300K vCPU-seconds** (2s avg per request × 0.5 vCPU) — 180K free, 120K billable × $0.000024 = $2.88
+- **600K GiB-seconds** (2s avg × 1 GiB) — 360K free, 240K billable × $0.0000031 = $0.74
+</details>
+
+<details>
+<summary>² APIM Standard v2 pricing notes</summary>
+
+- Base unit: **$700/mo** (~$0.97/hr × 720 hrs), includes 50M API calls
+- Additional scale units: $500/mo each (up to 10)
+- If APIM cost is a concern, consider using **Basic v2** (~$170/mo) or connecting directly to the Container App endpoint without APIM
+</details>
 
 ## Prerequisites
 
