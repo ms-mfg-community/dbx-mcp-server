@@ -210,31 +210,95 @@ The MCP server will appear in the **MCP Servers** list with a **Server URL** —
 
 ### Step 3: Configure Security Policies (Recommended)
 
-After creating the MCP server, add security policies:
+After creating the MCP server, add security policies to control rate limiting and protect sensitive headers.
 
-1. In the **MCP Servers** list, click on your MCP server
-2. In the left menu under **MCP**, select **Policies**
-3. Add the following policy to rate-limit tool calls and strip sensitive headers:
+#### Navigate to the Policy Editor
+
+1. In the [Azure Portal](https://portal.azure.com), go to your **API Management** instance
+2. In the left menu, under **APIs**, select **MCP Servers**
+3. Click on the MCP server you created in Step 2 (e.g., `databricks-error-logs`)
+4. In the left menu that appears under **MCP**, select **Policies**
+5. The policy editor opens with a default XML skeleton that looks like this:
 
 ```xml
-<!-- Rate limit tool calls by MCP session -->
-<set-variable name="body" value="@(context.Request.Body.As<string>(preserveContent: true))" />
-<choose>
-    <when condition="@(
-        Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"] != null
-        && Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"].ToString() == "tools/call"
-    )">
-    <rate-limit-by-key
-        calls="60"
-        renewal-period="60"
-        counter-key="@(
-            context.Request.Headers.GetValueOrDefault("Mcp-Session-Id", "unknown")
-        )" />
-    </when>
-</choose>
+<policies>
+    <inbound>
+        <base />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
 ```
 
-> For more security options including **OAuth 2.1 with Microsoft Entra ID**, see [Secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers).
+#### Add the Recommended Policies
+
+Replace the entire contents of the policy editor with the following complete policy document. This adds:
+- **Rate limiting** — 60 `tools/call` requests per minute per MCP session
+- **Outbound header stripping** — removes `X-Databricks-Token` from responses so tokens are never leaked to clients
+
+```xml
+<policies>
+    <inbound>
+        <base />
+        <!-- Rate limit tool calls by MCP session (60 calls/min per session) -->
+        <set-variable name="body" value="@(context.Request.Body.As<string>(preserveContent: true))" />
+        <choose>
+            <when condition="@(
+                Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"] != null
+                && Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"].ToString() == "tools/call"
+            )">
+                <rate-limit-by-key
+                    calls="60"
+                    renewal-period="60"
+                    counter-key="@(
+                        context.Request.Headers.GetValueOrDefault("Mcp-Session-Id", "unknown")
+                    )" />
+            </when>
+        </choose>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+        <!-- Strip Databricks PAT token from responses to prevent leakage -->
+        <set-header name="X-Databricks-Token" exists-action="delete" />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+```
+
+6. Click **Save** at the top of the policy editor
+
+> **⚠️ Important:** Do **not** access `context.Response.Body` in MCP server policies. Doing so triggers response buffering which breaks MCP streaming. The policy above only inspects the *request* body, which is safe.
+
+> **💡 Tip:** Policies defined at the **All APIs** scope in APIM are evaluated *before* MCP server-scoped policies. If you have global policies, ensure they don't conflict (e.g., duplicate rate limiting).
+
+#### Optional: Add OAuth 2.1 / Entra ID Authentication
+
+For stronger authentication beyond subscription keys, add a `validate-azure-ad-token` policy in the `<inbound>` section (after `<base />`):
+
+```xml
+<validate-azure-ad-token tenant-id="YOUR_ENTRA_TENANT_ID"
+    header-name="Authorization"
+    failed-validation-httpcode="401"
+    failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
+    <client-application-ids>
+        <application-id>YOUR_CLIENT_APP_ID</application-id>
+    </client-application-ids>
+</validate-azure-ad-token>
+```
+
+> For the full security reference including credential manager and outbound OAuth, see [Secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers).
 
 ### Step 4: Get Your MCP Server URL
 
@@ -469,3 +533,5 @@ APIM's native MCP server support provides built-in security features. See [Secur
 | Empty results from tools | Verify Databricks headers are correct; test PAT token directly |
 | Container not starting | Check `az containerapp logs show` for startup errors |
 | APIM returns 500 | Container App may be scaling from zero; retry after 30s |
+| MCP streaming hangs/fails | Do not access `context.Response.Body` in MCP server policies; disable response body logging at the All APIs scope (set Frontend Response payload bytes to `0`) |
+| MCP server not visible in APIM portal | Known issue with Standard v2 portal blade; verify via REST API or CLI — the server may be functional even if not displayed |
