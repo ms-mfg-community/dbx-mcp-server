@@ -90,4 +90,5 @@ output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppsEnv.outputs.env
 output MCP_SERVER_FQDN string = containerApp.outputs.fqdn
 output MCP_SERVER_URL string = 'https://${containerApp.outputs.fqdn}/mcp'
 output APIM_GATEWAY_URL string = apim.outputs.gatewayUrl
-output APIM_MCP_ENDPOINT string = '${apim.outputs.gatewayUrl}/mcp'
+output APIM_NAME string = apim.outputs.apimName
+output APIM_BACKEND_URL string = apim.outputs.backendUrl

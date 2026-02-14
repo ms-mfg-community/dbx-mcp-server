@@ -14,7 +14,7 @@ graph TB
 
     subgraph Azure["☁️ Azure (Resource Group: rg-dev)"]
         subgraph APIM["Azure API Management (Standard v2)"]
-            APIMGw["Gateway Endpoint<br/>apim-*.azure-api.net/mcp"]
+            APIMGw["Gateway Endpoint<br/>apim-*.azure-api.net/dbx-mcp/mcp"]
             SubKey["🔑 Subscription Key Auth"]
             RateLimit["⏱️ Rate Limiting (60 req/min)"]
             StripToken["🛡️ Strip X-Databricks-Token<br/>from outbound"]
@@ -186,6 +186,66 @@ The command will:
 
 This takes approximately 3-5 minutes (plus 10-20 minutes if APIM is provisioned for the first time).
 
+### Step 2: Register MCP Server in APIM
+
+After `azd up` completes, you need to register the MCP server using APIM's native MCP server support. This step is done via the Azure Portal because the `mcpServers` resource type is not yet available in ARM/Bicep.
+
+> **Why this step?** APIM has built-in MCP protocol support that handles session management, streaming, and tool routing automatically — much better than treating MCP as a generic REST API. See [Expose an existing MCP server](https://learn.microsoft.com/en-us/azure/api-management/expose-existing-mcp-server) for details.
+
+1. Go to the [Azure Portal](https://portal.azure.com) and navigate to your APIM instance
+2. In the left menu, under **APIs**, select **MCP Servers**
+3. Click **+ Create MCP server**
+4. Select **Expose an existing MCP server**
+5. Fill in the form:
+   - **MCP server base URL**: Your Container App URL (find it with `azd env get-values` → `MCP_SERVER_URL`, e.g., `https://ca-mcp-server-dev.xxxxx.eastus2.azurecontainerapps.io`)
+
+     > ⚠️ Use the **Container App URL** (not the APIM URL). This is the backend server that APIM will proxy to. Do **not** include `/mcp` — APIM appends this automatically.
+   - **Transport type**: `Streamable HTTP`
+   - **Name**: `databricks-error-logs`
+   - **Base path**: `dbx-mcp` (this becomes part of the APIM URL, e.g., `https://apim-xxx.azure-api.net/dbx-mcp/mcp`)
+   - **Description**: `Databricks Error Logs MCP Server`
+6. Click **Create**
+
+The MCP server will appear in the **MCP Servers** list with a **Server URL** — this is the endpoint developers will use in their VS Code configuration.
+
+### Step 3: Configure Security Policies (Recommended)
+
+After creating the MCP server, add security policies:
+
+1. In the **MCP Servers** list, click on your MCP server
+2. In the left menu under **MCP**, select **Policies**
+3. Add the following policy to rate-limit tool calls and strip sensitive headers:
+
+```xml
+<!-- Rate limit tool calls by MCP session -->
+<set-variable name="body" value="@(context.Request.Body.As<string>(preserveContent: true))" />
+<choose>
+    <when condition="@(
+        Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"] != null
+        && Newtonsoft.Json.Linq.JObject.Parse((string)context.Variables["body"])["method"].ToString() == "tools/call"
+    )">
+    <rate-limit-by-key
+        calls="60"
+        renewal-period="60"
+        counter-key="@(
+            context.Request.Headers.GetValueOrDefault("Mcp-Session-Id", "unknown")
+        )" />
+    </when>
+</choose>
+```
+
+> For more security options including **OAuth 2.1 with Microsoft Entra ID**, see [Secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers).
+
+### Step 4: Get Your MCP Server URL
+
+After registration, the MCP server URL will be shown in the **MCP Servers** blade:
+
+```
+https://<your-apim>.azure-api.net/dbx-mcp/mcp
+```
+
+This is the URL developers will use in their VS Code `mcp.json` configuration.
+
 ## After Deployment
 
 ### For Admins: Get Your Deployment Details
@@ -196,9 +256,10 @@ If you ran `azd up`, retrieve your endpoints:
 azd env get-values
 ```
 
-Key outputs to share with developers:
-- `APIM_MCP_ENDPOINT` — The MCP server URL (e.g., `https://apim-xxxxx.azure-api.net/mcp`)
+Key outputs:
 - `APIM_GATEWAY_URL` — The APIM gateway base URL
+- `MCP_SERVER_URL` — The Container App backend URL (used in APIM MCP server registration above)
+- The **MCP Server URL** from the APIM MCP Servers blade (e.g., `https://apim-xxxxx.azure-api.net/dbx-mcp/mcp`) — this is what developers use
 
 ---
 
@@ -210,7 +271,7 @@ Key outputs to share with developers:
 
 | Value | Where to Get It | Example |
 |-------|----------------|---------|
-| **MCP Server URL** | Your admin provides this (the APIM endpoint) | `https://apim-xxxxx.azure-api.net/mcp` |
+| **MCP Server URL** | Your admin provides this (from the APIM MCP Servers blade) | `https://apim-xxxxx.azure-api.net/dbx-mcp/mcp` |
 | **APIM Subscription Key** | Your admin provides this, or self-service from the APIM Developer Portal (see below) | `c17ba71f3ed248e6...` |
 | **Databricks Workspace URL** | Your Databricks workspace → browser address bar, or **Settings → Workspace URL** | `https://adb-1234567890.azuredatabricks.net` |
 | **Databricks Personal Access Token** | Generate one in Databricks (see steps below) | `dapi0123456789abcdef...` |
@@ -263,7 +324,7 @@ Add to `.vscode/mcp.json` in any workspace where you want Databricks error log t
   "servers": {
     "databricksErrorLogs": {
       "type": "http",
-      "url": "https://<your-apim>.azure-api.net/mcp",
+      "url": "https://<your-apim>.azure-api.net/dbx-mcp/mcp",
       "headers": {
         "Ocp-Apim-Subscription-Key": "${input:apim-key}",
         "X-Databricks-Host": "${input:databricks-host}",
@@ -313,7 +374,7 @@ Add to `.vscode/mcp.json` in any workspace where you want Databricks error log t
 }
 ```
 
-Replace `<your-apim>` with the MCP Server URL your admin provided (e.g., `apim-q3gyfuo6xmbwk`).
+Replace `<your-apim>` with your APIM instance name. The full URL comes from the **MCP Servers** blade in the Azure Portal (see admin setup Step 2 above).
 
 > **Important:** Use `"type": "http"` (not `"sse"`). This tells VS Code to use the streamable-http MCP transport, which is the current standard for remote servers.
 
@@ -342,7 +403,7 @@ Edit your Claude Desktop config (`%APPDATA%\Claude\claude_desktop_config.json` o
 {
   "mcpServers": {
     "databricks": {
-      "url": "https://<your-apim>.azure-api.net/mcp",
+      "url": "https://<your-apim>.azure-api.net/dbx-mcp/mcp",
       "headers": {
         "Ocp-Apim-Subscription-Key": "your-subscription-key",
         "X-Databricks-Host": "https://adb-xxx.azuredatabricks.net",
@@ -376,12 +437,28 @@ azd down
 
 ## Security Considerations
 
-- **APIM subscription keys** gate access to the MCP endpoint
-- **Databricks PAT tokens** are passed via headers and never stored server-side
-- **APIM outbound policy** strips `X-Databricks-Token` from response headers
+APIM's native MCP server support provides built-in security features. See [Secure access to MCP servers](https://learn.microsoft.com/en-us/azure/api-management/secure-mcp-servers) for the full reference.
+
+### Inbound Security (MCP Client → APIM)
+
+| Method | Description | Configuration |
+|--------|-------------|---------------|
+| **Subscription key** (default) | Clients send `Ocp-Apim-Subscription-Key` header | Enabled via the APIM product — no extra config needed |
+| **OAuth 2.1 / Entra ID** | Validate JWT tokens from Microsoft Entra ID | Add `validate-azure-ad-token` policy to MCP server policies |
+| **IP filtering** | Restrict by client IP | Add `ip-filter` policy |
+
+### Outbound Security (APIM → Backend)
+
+- **Databricks PAT tokens** are passed via `X-Databricks-*` headers per-request and **never stored** server-side
 - **HTTPS** is enforced end-to-end (APIM → Container App)
-- **Rate limiting** is set to 60 requests/minute per subscription key
-- **Container Apps** ingress is external but only accepts traffic forwarded by APIM in production (can be locked down further with IP restrictions)
+- Request headers are automatically forwarded to MCP tool invocations by APIM's native MCP support
+- For enhanced security, use APIM's [credential manager](https://learn.microsoft.com/en-us/azure/api-management/credentials-overview) to inject OAuth tokens to backends
+
+### Additional Measures
+
+- **Rate limiting** — configure per-session rate limits in MCP server policies (see Step 3 above)
+- **Container Apps** ingress can be locked down with IP restrictions to only accept APIM traffic
+- **Diagnostic logging** — if enabled at the "All APIs" scope, set **Frontend Response payload bytes to log** to `0` to avoid interfering with MCP streaming (see [MS Learn](https://learn.microsoft.com/en-us/azure/api-management/expose-existing-mcp-server#prerequisites))
 
 ## Troubleshooting
 
