@@ -5,9 +5,10 @@ This MCP server provides tools for searching and analyzing application
 error logs stored in a Databricks Delta table. It enables developers to
 get error context directly from GitHub Copilot.
 
-Supports two modes:
+Supports three modes:
   - stdio transport (local dev, default)
-  - streamable-http transport (Azure / remote hosting)
+  - streamable-http transport locally (for teams without Azure)
+  - streamable-http transport on Azure (Container Apps + APIM)
 
 Databricks configuration can be provided via:
   1. Environment variables (local dev fallback)

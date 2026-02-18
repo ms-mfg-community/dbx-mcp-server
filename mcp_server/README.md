@@ -12,7 +12,7 @@ An MCP (Model Context Protocol) server that enables GitHub Copilot to search and
 - **Time-range search** — find errors within the last N hours
 - **Severity summary** — quick overview of errors by severity level
 - **Dynamic configuration** — specify Databricks workspace, warehouse, catalog at connection time
-- **Dual transport** — stdio for local dev, streamable-http for Azure hosting
+- **Three run modes** — stdio for local dev, local HTTP server for teams without Azure, streamable-http for Azure hosting
 
 ## Configuration
 
@@ -60,12 +60,48 @@ For clients that can't set custom HTTP headers, call the `configure_databricks` 
 
 ## Quick Start (Local)
 
+### Option 1: stdio (simplest — VS Code manages the process)
+
 ```bash
 cd mcp_server
 cp .env.example .env   # Edit with your credentials
 uv sync
 uv run python -m databricks_error_logs_mcp
 ```
+
+### Option 2: Local HTTP Server (no Azure required)
+
+Run the server as a local HTTP service on your machine or network. This is ideal for teams that **cannot deploy to Azure** but still want the HTTP-based MCP experience.
+
+> **Why not Flask?** MCP's streamable-http transport uses streaming responses (Server-Sent Events) which require an ASGI server. The server uses [Starlette](https://www.starlette.io/) + [uvicorn](https://www.uvicorn.org/) — Python's standard ASGI stack. The developer experience is identical to Flask: one command to start, runs on localhost, hot-reloadable.
+
+```bash
+cd mcp_server
+cp .env.example .env   # Edit with your Databricks credentials
+
+# Set transport to HTTP
+# On macOS/Linux:
+export MCP_TRANSPORT=streamable-http
+
+# On Windows (PowerShell):
+$env:MCP_TRANSPORT="streamable-http"
+
+# Start the server
+uv sync
+uv run python -m databricks_error_logs_mcp
+```
+
+The server starts at `http://localhost:8000` with:
+- `POST /mcp` — MCP protocol endpoint (streamable-http)
+- `GET /health` — health check
+
+You can also configure the port and host:
+```bash
+export MCP_SERVER_PORT=9000        # default: 8000
+export MCP_SERVER_HOST=127.0.0.1   # default: 0.0.0.0
+```
+
+> **Tip:** Use `0.0.0.0` (default) to allow connections from other machines on your network. Use `127.0.0.1` to restrict to localhost only.
 
 Test with the MCP Inspector:
 ```bash
@@ -146,7 +182,66 @@ If the MCP server is deployed to Azure (see [AZURE_DEPLOYMENT.md](../AZURE_DEPLO
 
 > **Note:** `"type": "http"` tells VS Code to use the streamable-http MCP transport, which is the current standard for remote MCP servers.
 
-### Option B: Local Server (stdio)
+### Option B: Local HTTP Server (no Azure required)
+
+If your team cannot deploy to Azure, run the server locally as an HTTP service and connect VS Code over HTTP.
+
+1. Start the server locally (see [Quick Start Option 2](#option-2-local-http-server-no-azure-required) above)
+2. Create or edit `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "databricksErrorLogs": {
+      "type": "http",
+      "url": "http://localhost:8000/mcp",
+      "headers": {
+        "X-Databricks-Host": "${input:databricks-host}",
+        "X-Databricks-Token": "${input:databricks-token}",
+        "X-Databricks-Warehouse-Id": "${input:databricks-warehouse-id}",
+        "X-Databricks-Catalog": "${input:databricks-catalog}",
+        "X-Databricks-Schema": "${input:databricks-schema}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "databricks-host",
+      "description": "Databricks workspace URL (e.g. https://adb-xxx.azuredatabricks.net)"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-token",
+      "description": "Databricks Personal Access Token",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-warehouse-id",
+      "description": "Databricks SQL Warehouse ID"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-catalog",
+      "description": "Unity Catalog name",
+      "default": "dbx_1"
+    },
+    {
+      "type": "promptString",
+      "id": "databricks-schema",
+      "description": "Schema name",
+      "default": "default"
+    }
+  ]
+}
+```
+
+3. Restart VS Code — Copilot will prompt for your Databricks credentials
+
+> **Note:** No APIM subscription key needed — you're connecting directly to the local server. If the server is on another machine on your network, replace `localhost` with that machine's IP/hostname.
+
+### Option C: Local Server (stdio)
 
 If running the MCP server locally on your machine:
 
