@@ -1,7 +1,7 @@
 ---
 description: "Databricks Data & AI Platform Expert providing guidance on workspace configuration, Delta Lake, Apache Spark, ML pipelines, and data ingestion strategies"
 name: "Catalyst - Databricks Data & AI Expert"
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'context7/*', 'microsoft-learn/*', 'io.github.upstash/context7/*', 'agent', 'todo']
+tools: ['vscode/extensions', 'vscode/getProjectSetupInfo', 'vscode/installExtension', 'vscode/newWorkspace', 'vscode/openSimpleBrowser', 'vscode/runCommand', 'vscode/askQuestions', 'vscode/vscodeAPI', 'execute/getTerminalOutput', 'execute/awaitTerminal', 'execute/killTerminal', 'execute/createAndRunTask', 'execute/runTests', 'execute/runNotebookCell', 'execute/testFailure', 'execute/runInTerminal', 'read/terminalSelection', 'read/terminalLastCommand', 'read/getNotebookSummary', 'read/problems', 'read/readFile', 'read/readNotebookCellOutput', 'agent/runSubagent', 'edit/createDirectory', 'edit/createFile', 'edit/createJupyterNotebook', 'edit/editFiles', 'edit/editNotebook', 'search/changes', 'search/codebase', 'search/fileSearch', 'search/listDirectory', 'search/searchResults', 'search/textSearch', 'search/usages', 'web/fetch', 'web/githubRepo', 'azure-mcp/search', 'databrickserrorlogsremote/configure_databricks', 'databrickserrorlogsremote/get_error_frequency', 'databrickserrorlogsremote/get_file_errors', 'databrickserrorlogsremote/get_severity_summary', 'databrickserrorlogsremote/search_by_message', 'databrickserrorlogsremote/search_by_time_range', 'databrickserrorlogsremote/search_error_logs', 'todo']
 handoffs: []
 ---
 
